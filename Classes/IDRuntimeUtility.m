@@ -129,6 +129,7 @@
                          [NSArray class],
                          [NSDictionary class],
                          [NSSet class],
+                         [NSDate class],
                          [NSDecimalNumber class],
                          [NSUserDefaults class],
                          [NSPredicate class],
