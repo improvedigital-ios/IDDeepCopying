@@ -8,7 +8,7 @@
 
 #import "IDRuntimeUtility.h"
 #import <objc/runtime.h>
-#import "DeepCopying.h"
+#import "IDDeepCopying.h"
 
 //TODO: Handle NSSet
 //TODO: Mutable deep copying
@@ -68,7 +68,10 @@
 
 + (id)safeDeepCopy: (id)obj {
     
-    if ([obj conformsToProtocol:@protocol(DeepCopying)]) {
+    if ([[self supportedClasses] containsObject:[obj class]]) {
+        return [obj copy];
+    }
+    else if ([obj conformsToProtocol:@protocol(DeepCopying)]) {
         id exampleObj = (id <DeepCopying>) obj;
         return [exampleObj deepCopy];
     }
@@ -110,5 +113,32 @@
     }
     return copyValue;
 }
+
++ (NSSet *)supportedClasses {
+    
+    NSSet * const set = [NSSet setWithObjects:
+                         [NSNumber class],
+                         [NSString class],
+                         [NSArray class],
+                         [NSDictionary class],
+                         [NSSet class],
+                         [NSDecimalNumber class],
+                         [NSUserDefaults class],
+                         [NSPredicate class],
+                         [NSDateFormatter class],
+                         [NSTimer class],
+                         [NSError class],
+                         [NSEnumerator class],
+                         [NSURL class],
+                         [NSURLRequest class],
+                         [NSURLSession class],
+                         [NSValue class],
+                         [NSIndexSet class],
+                         [NSThread class],
+                         [NSNull class], nil];
+    
+    return set;
+}
+
 
 @end
