@@ -68,7 +68,15 @@
 
 + (id)safeDeepCopy: (id)obj {
     
-    if ([[self supportedClasses] containsObject:[obj class]]) {
+    BOOL foundInSet = NO;
+    for (Class type in [self supportedClasses]) {
+        if ([obj isKindOfClass:type]) {
+            foundInSet = YES;
+            break;
+        };
+    }
+    
+    if (foundInSet) {
         return [obj copy];
     }
     else if ([obj conformsToProtocol:@protocol(DeepCopying)]) {
@@ -117,7 +125,6 @@
 + (NSSet *)supportedClasses {
     
     NSSet * const set = [NSSet setWithObjects:
-                         [NSNumber class],
                          [NSString class],
                          [NSArray class],
                          [NSDictionary class],
@@ -132,10 +139,17 @@
                          [NSURL class],
                          [NSURLRequest class],
                          [NSURLSession class],
-                         [NSValue class],
+                         [NSValue class], // + NSNumber
                          [NSIndexSet class],
                          [NSThread class],
-                         [NSNull class], nil];
+                         [NSNull class],
+                         [NSBundle class],
+                         [NSLock class],
+                         [NSCache class],
+                         [NSCalendar class],
+                         [NSLocale class],
+                         [NSException class],
+                         nil];
     
     return set;
 }
