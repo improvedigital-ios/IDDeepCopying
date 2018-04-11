@@ -20,7 +20,7 @@
 }
 
 + (id)deepCopyForObject:(id)obj options:(IDRuntimeUtilityOptions)options {
-
+    
     Class objType = [obj class];
     NSAssert(objType.accessInstanceVariablesDirectly, @"Potentially can not use this method, if has readonly properties");
     
@@ -33,7 +33,7 @@
         
         objc_property_t property = props[i];
         NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
-        
+
         NSString * const hashPropertyName = @"hash";
         NSString * const superclassPropertyName = @"superclass";
         NSString * const descriptionPropertyName = @"description";
@@ -46,6 +46,26 @@
             continue;
         }
         
+        const char *attributes = property_getAttributes(property);
+        char buffer[1 + strlen(attributes)];
+        strcpy(buffer, attributes);
+        char *state = buffer, *attribute;
+        
+        
+        // Detect iVar
+        BOOL detectIvar = NO;
+        while ((attribute = strsep(&state, ",")) != NULL) {
+            if (attribute[0] == 'V') {
+                detectIvar = YES;
+            }
+        }
+        
+        if (!detectIvar) {
+            NSLog(@"Readonly property %@ in class %@ won't be copied", propertyName, NSStringFromClass([obj class]));
+            continue;
+        }
+
+        // Copy value
         id copyValue = nil;
         if (options == IDRuntimeUtilityOptionSurface) {
             copyValue = [self safeDeepCopy:[obj valueForKey:propertyName]];
