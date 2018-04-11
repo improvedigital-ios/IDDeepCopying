@@ -21,6 +21,10 @@
 
 + (id)deepCopyForObject:(id)obj options:(IDRuntimeUtilityOptions)options {
 
+    if (obj == nil) {
+        return nil;
+    }
+
     Class objType = [obj class];
     NSAssert(objType.accessInstanceVariablesDirectly, @"Potentially can not use this method, if has readonly properties");
     
