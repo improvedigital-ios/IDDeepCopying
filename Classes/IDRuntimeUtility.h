@@ -16,6 +16,6 @@ typedef NS_OPTIONS(NSUInteger, IDRuntimeUtilityOptions) {
 @interface IDRuntimeUtility : NSObject
 
 + (id)deepCopyForObject: (id)obj;
-+ (id)deepCopyForObject: (id)obj options: (IDRuntimeUtilityOptions)options;
++ (id)deepCopyForObject: (id)obj assignedValuesForKeys:(NSSet <NSString *> *)keys;
 
 @end

@@ -7,22 +7,36 @@
 //
 
 #import "IDRuntimeUtility.h"
+#import "DeepCopyingProtocol.h"
 #import <objc/runtime.h>
-#import "IDDeepCopying.h"
 
-//TODO: Handle NSSet
 //TODO: Mutable deep copying
 
 @implementation IDRuntimeUtility
 
 + (id)deepCopyForObject: (id)obj {
-    return [self deepCopyForObject:obj options:IDRuntimeUtilityOptionEmbedded];
+    
+    return [self deepCopyForObject:obj
+                           options:IDRuntimeUtilityOptionEmbedded
+             assignedValuesForKeys:nil];
 }
 
-+ (id)deepCopyForObject:(id)obj options:(IDRuntimeUtilityOptions)options {
++ (id)deepCopyForObject: (id)obj assignedValuesForKeys:(NSSet <NSString *> *)keys {
+    
+    return [self deepCopyForObject:obj
+                           options:IDRuntimeUtilityOptionEmbedded
+             assignedValuesForKeys:keys];
+}
+
+#pragma mark - Private
++ (id)deepCopyForObject: (id)obj
+                options: (IDRuntimeUtilityOptions)options
+  assignedValuesForKeys: (NSSet <NSString *> *)keys {
     
     Class objType = [obj class];
     NSAssert(objType.accessInstanceVariablesDirectly, @"Potentially can not use this method, if has readonly properties");
+    
+    NSMutableSet *remainingKeys = keys.mutableCopy;
     
     id myCopy = [[objType alloc] init];
     
@@ -33,24 +47,11 @@
         
         objc_property_t property = props[i];
         NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
-
-        NSString * const hashPropertyName = @"hash";
-        NSString * const superclassPropertyName = @"superclass";
-        NSString * const descriptionPropertyName = @"description";
-        NSString * const debugDescriptionPropertyName = @"debugDescription";
-        
-        if ([propertyName isEqualToString:hashPropertyName] ||
-            [propertyName isEqualToString:superclassPropertyName] ||
-            [propertyName isEqualToString:descriptionPropertyName] ||
-            [propertyName isEqualToString:debugDescriptionPropertyName]) {
-            continue;
-        }
         
         const char *attributes = property_getAttributes(property);
         char buffer[1 + strlen(attributes)];
         strcpy(buffer, attributes);
         char *state = buffer, *attribute;
-        
         
         // Detect iVar
         BOOL detectIvar = NO;
@@ -61,26 +62,41 @@
         }
         
         if (!detectIvar) {
-            NSLog(@"Readonly property %@ in class %@ won't be copied", propertyName, NSStringFromClass([obj class]));
+            // NSLog(@"Readonly property %@ in class %@ won't be copied", propertyName, NSStringFromClass([obj class]));
             continue;
         }
-
-        // Copy value
-        id copyValue = nil;
-        if (options == IDRuntimeUtilityOptionSurface) {
-            copyValue = [self safeDeepCopy:[obj valueForKey:propertyName]];
-        }
-        else if (options == IDRuntimeUtilityOptionEmbedded) {
-            copyValue = [self copyValueWithPropertyName:propertyName inObj:obj];
-        }
-        else {
-            NSAssert(NO, @"Not handled another option states");
+        
+        id referenceValue = [obj valueForKey:propertyName];
+        
+        // Reference value
+        if ([remainingKeys containsObject:propertyName]) {
+            [remainingKeys removeObject:propertyName];
+            [myCopy setValue:referenceValue forKey:propertyName];
         }
         
-        if (copyValue != nil) {
-            [myCopy setValue:copyValue forKey:propertyName];
+        // Copy value
+        else {
+            id copyValue = nil;
+            if (options == IDRuntimeUtilityOptionSurface) {
+                copyValue = [self safeDeepCopy:referenceValue];
+            }
+            else if (options == IDRuntimeUtilityOptionEmbedded) {
+                copyValue = [self copyValueWithPropertyName:propertyName inObj:obj];
+            }
+            else {
+                NSAssert(NO, @"Not handled another option states");
+            }
+            
+            if (copyValue != nil) {
+                [myCopy setValue:copyValue forKey:propertyName];
+            }
         }
     }
+    
+    if (remainingKeys.count) {
+        NSLog(@"Keys not found with deep copy process: %@", remainingKeys);
+    }
+    
     free(props);
     
     return myCopy;
@@ -114,34 +130,12 @@
 }
 
 + (id)copyValueWithPropertyName: (NSString *)propertyName inObj: (id)obj {
-
+    
     id value = [obj valueForKey:propertyName];
     
     id copyValue = nil;
     if ([obj conformsToProtocol:@protocol(DeepCopying)]) {
-        
-        if ([value isKindOfClass:[NSArray class]]) {
-            
-            NSMutableArray *mutableArray = [NSMutableArray new];
-            for (id val in value) {
-                id arrayObj = [self safeDeepCopy: val];
-                [mutableArray addObject:arrayObj];
-            }
-            
-            copyValue = mutableArray.copy;
-        }
-        else if ([value isKindOfClass:[NSDictionary class]]) {
-            
-            NSMutableDictionary *mutableDictionary = [NSMutableDictionary new];
-            NSDictionary *dict = (NSDictionary *)value;
-            for (id key in dict.allKeys) {
-                mutableDictionary[key] = [self safeDeepCopy: dict[key]];
-            }
-            copyValue = mutableDictionary.copy;
-        }
-        else {
-            copyValue = [self safeDeepCopy: value];
-        }
+        copyValue = [self safeDeepCopy:value];
     }
     return copyValue;
 }
@@ -150,9 +144,6 @@
     
     NSSet * const set = [NSSet setWithObjects:
                          [NSString class],
-                         [NSArray class],
-                         [NSDictionary class],
-                         [NSSet class],
                          [NSDate class],
                          [NSDecimalNumber class],
                          [NSUserDefaults class],

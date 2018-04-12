@@ -21,7 +21,7 @@
     SomeObject *one = [SomeObject new];
     one.someObject2 = [SomeObject2 new];
     one.someObject2.someArray = @[[SomeObject3 new], [SomeObject3 new]];
-    //[one.someObject2 setValue:[NSURL URLWithString:@"someString"] forKey:@"someURL"];
+    one.someObject2.someURL = [NSURL URLWithString:@"someString"];
     
     SomeObject *copy = [one deepCopy];
     

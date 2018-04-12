@@ -13,6 +13,6 @@
 @interface SomeObject2 : NSObject <DeepCopying>
 
 @property (strong, nonatomic) NSArray <SomeObject3 *>* someArray;
-@property (strong, nonatomic, readonly) NSURL *someURL;
+@property (strong, nonatomic) NSURL *someURL;
 
 @end

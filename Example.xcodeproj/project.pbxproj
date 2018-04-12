@@ -17,6 +17,7 @@
 		55646CDE207E33280060517B /* SomeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 55646CD8207E33280060517B /* SomeObject.m */; };
 		55646CDF207E33280060517B /* SomeObject2.m in Sources */ = {isa = PBXBuildFile; fileRef = 55646CD9207E33280060517B /* SomeObject2.m */; };
 		55646CE0207E33280060517B /* SomeObject3.m in Sources */ = {isa = PBXBuildFile; fileRef = 55646CDD207E33280060517B /* SomeObject3.m */; };
+		55646CE3207F0F880060517B /* IDDeepCopyingCategories.m in Sources */ = {isa = PBXBuildFile; fileRef = 55646CE2207F0F880060517B /* IDDeepCopyingCategories.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,8 @@
 		55646CDB207E33280060517B /* SomeObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SomeObject.h; sourceTree = "<group>"; };
 		55646CDC207E33280060517B /* SomeObject2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SomeObject2.h; sourceTree = "<group>"; };
 		55646CDD207E33280060517B /* SomeObject3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SomeObject3.m; sourceTree = "<group>"; };
+		55646CE1207F0F880060517B /* IDDeepCopyingCategories.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IDDeepCopyingCategories.h; sourceTree = "<group>"; };
+		55646CE2207F0F880060517B /* IDDeepCopyingCategories.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IDDeepCopyingCategories.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,8 +95,10 @@
 			children = (
 				55646CD2207E33230060517B /* DeepCopyingProtocol.h */,
 				55646CD3207E33230060517B /* IDDeepCopying.h */,
-				55646CD4207E33230060517B /* IDRuntimeUtility.m */,
 				55646CD5207E33230060517B /* IDRuntimeUtility.h */,
+				55646CD4207E33230060517B /* IDRuntimeUtility.m */,
+				55646CE1207F0F880060517B /* IDDeepCopyingCategories.h */,
+				55646CE2207F0F880060517B /* IDDeepCopyingCategories.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -182,6 +187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55646CB0207E2D420060517B /* ViewController.m in Sources */,
+				55646CE3207F0F880060517B /* IDDeepCopyingCategories.m in Sources */,
 				55646CBB207E2D430060517B /* main.m in Sources */,
 				55646CDE207E33280060517B /* SomeObject.m in Sources */,
 				55646CDF207E33280060517B /* SomeObject2.m in Sources */,
