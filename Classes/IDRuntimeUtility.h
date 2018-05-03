@@ -1,9 +1,9 @@
 //
 //  IDRuntimeUtility.h
-//  objc.shoploan
+//  Improve Digital
 //
 //  Created by Андрей on 17.03.2018.
-//  Copyright © 2018 sovcombank. All rights reserved.
+//  Copyright © 2018 Improve Digital. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

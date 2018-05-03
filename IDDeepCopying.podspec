@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'IDDeepCopying'
-  s.version          = '0.1.0'
+  s.version          = '0.2.1'
   s.summary          = 'IDDeepCopying is a only truly way for fast object deep copying'
 
 # This description is used to generate tags and improve search results.
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Andrey Bronnikov' => 'brand_nsk@mail.ru' }
-  s.source           = { :git => 'https://github.com/improvedigital-ios/IDDeepCopying.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/improvedigital-ios/IDDeepCopying.git', :branch => "master" }
 
   s.ios.deployment_target = '8.0'
 
