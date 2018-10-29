@@ -108,15 +108,7 @@
         return nil;
     }
     
-    BOOL foundInSet = NO;
-    for (Class type in [self supportedClasses]) {
-        if ([obj isKindOfClass:type]) {
-            foundInSet = YES;
-            break;
-        };
-    }
-    
-    if (foundInSet) {
+    if ([obj conformsToProtocol:@protocol(NSCopying)]) {
         return [obj copy];
     }
     else if ([obj conformsToProtocol:@protocol(DeepCopying)]) {
@@ -138,36 +130,6 @@
         copyValue = [self safeDeepCopy:value];
     }
     return copyValue;
-}
-
-+ (NSSet *)supportedClasses {
-    
-    NSSet * const set = [NSSet setWithObjects:
-                         [NSString class],
-                         [NSDate class],
-                         [NSDecimalNumber class],
-                         [NSUserDefaults class],
-                         [NSPredicate class],
-                         [NSDateFormatter class],
-                         [NSTimer class],
-                         [NSError class],
-                         [NSEnumerator class],
-                         [NSURL class],
-                         [NSURLRequest class],
-                         [NSURLSession class],
-                         [NSValue class], // + NSNumber
-                         [NSIndexSet class],
-                         [NSThread class],
-                         [NSNull class],
-                         [NSBundle class],
-                         [NSLock class],
-                         [NSCache class],
-                         [NSCalendar class],
-                         [NSLocale class],
-                         [NSException class],
-                         nil];
-    
-    return set;
 }
 
 

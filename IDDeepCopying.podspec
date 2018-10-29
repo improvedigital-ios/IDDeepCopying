@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'IDDeepCopying'
-  s.version          = '0.2.1'
+  s.version          = '0.3.0'
   s.summary          = 'IDDeepCopying is a only truly way for fast object deep copying'
 
 # This description is used to generate tags and improve search results.
